@@ -143,14 +143,14 @@ bool g_actionListLoaded = false; // action list will be populated from ini file 
     #define strcpy_s(dest,dest_sz, src) strlcpy(dest,src, dest_sz)
     #define REAKONTROL_INI "/UserPlugins/ReaKontrolConfig/reakontrol.ini"
     const char KKS_DEVICE_NAME[] = "Bome Software GmbH & Co. KG - Komplete Kontrol DAW - 1";
+		const char KKA_DEVICE_NAME[] = "Bome Software GmbH & Co. KG - Komplete Kontrol A DAW";
+		const char KKM_DEVICE_NAME[] = "Bome Software GmbH & Co. KG - Komplete Kontrol M DAW";
 #else
     #define REAKONTROL_INI "\\UserPlugins\\ReaKontrolConfig\\reakontrol.ini"
     const char KKS_DEVICE_NAME[] = "Komplete Kontrol DAW - 1";
+	const char KKA_DEVICE_NAME[] = "Komplete Kontrol A DAW";
+	const char KKM_DEVICE_NAME[] = "Komplete Kontrol M DAW";
 #endif
-
-const char KKA_DEVICE_NAME[] = "Komplete Kontrol A DAW";
-const char KKM_DEVICE_NAME[] = "Komplete Kontrol M DAW";
-
 
 void loadActionList() {
 	// Load Global Action list from config file
