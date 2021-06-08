@@ -1318,11 +1318,18 @@ class NiMidiSurface: public BaseSurface {
 				case CMD_KNOB_VOLUME5:
 				case CMD_KNOB_VOLUME6:
 				case CMD_KNOB_VOLUME7:
-					// only change track volume when not in EXT_EDIT_ACTIONS mode
-					if (g_extEditMode != EXT_EDIT_ACTIONS) {
-						this->_onKnobVolumeChange(command, convertSignedMidiValue(value));
-						g_extEditMode = EXT_EDIT_OFF;					
-					}					
+					// Because the A series does not have track selection buttons, provide the knobs as alternative.
+					if (g_extEditMode == EXT_EDIT_ACTIONS) {
+						// Subtract KNOB0 value, so that the actions are starting at 0.
+						int action = command - CMD_KNOB_VOLUME0;
+
+						// Execute custom action and restore mixer display afterwards
+						this->_callAction(action);
+						this->_allMixerUpdate();
+						this->_peakMixerUpdate();
+						// Turning the knob will most likely result to multiple events. Stay in Extended mode to avoid unintented volume changes.
+						g_extEditMode = EXT_EDIT_ON;
+					}
 					break;
 				case CMD_KNOB_PAN0:
 				case CMD_KNOB_PAN1:
