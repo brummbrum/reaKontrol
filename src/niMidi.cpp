@@ -142,15 +142,16 @@ bool g_actionListLoaded = false; // action list will be populated from ini file 
 #ifdef __APPLE__
     #define strcpy_s(dest,dest_sz, src) strlcpy(dest,src, dest_sz)
     #define REAKONTROL_INI "/UserPlugins/ReaKontrolConfig/reakontrol.ini"
-    const char KKS_DEVICE_NAME[] = "Bome Software GmbH & Co. KG - Komplete Kontrol DAW - 1";
 #else
     #define REAKONTROL_INI "\\UserPlugins\\ReaKontrolConfig\\reakontrol.ini"
-    const char KKS_DEVICE_NAME[] = "Komplete Kontrol DAW - 1";
 #endif
 
-const char KKA_DEVICE_NAME[] = "Komplete Kontrol A DAW";
-const char KKM_DEVICE_NAME[] = "Komplete Kontrol M DAW";
-
+const char *kk_device_names[] {
+    "Komplete Kontrol DAW - 1",
+    "Komplete Kontrol A DAW",
+    "Komplete Kontrol M DAW",
+    NULL
+};
 
 void loadActionList() {
 	// Load Global Action list from config file
@@ -218,40 +219,40 @@ void loadActionList() {
 	}
 }
 
-
-
 int getKkMidiInput() {
-	int count = GetNumMIDIInputs();
-	for (int dev = 0; dev < count; ++dev) {
-		char name[60];
-		bool present = GetMIDIInputName(dev, name, sizeof(name));
-		if (!present) {
-			continue;
-		}
-		if (strcmp(name, KKS_DEVICE_NAME) == 0
-			|| strcmp(name, KKA_DEVICE_NAME) == 0
-			|| strcmp(name, KKM_DEVICE_NAME) == 0) {
-			return dev;
-		}
-	}
-	return -1;
+    int count = GetNumMIDIInputs();
+    for (int dev = 0; dev < count; ++dev) {
+        char name[60];
+        bool present = GetMIDIInputName(dev, name, sizeof(name));
+        if (!present) {
+            continue;
+        }
+
+        for (int i = 0; kk_device_names[i] != NULL; i++) {
+            if (strstr(name, kk_device_names[i]) != NULL) {
+                return dev;
+            }
+        }
+    }
+    return -1;
 }
 
 int getKkMidiOutput() {
-	int count = GetNumMIDIOutputs();
-	for (int dev = 0; dev < count; ++dev) {
-		char name[60];
-		bool present = GetMIDIOutputName(dev, name, sizeof(name));
-		if (!present) {
-			continue;
-		}
-		if (strcmp(name, KKS_DEVICE_NAME) == 0
-			|| strcmp(name, KKA_DEVICE_NAME) == 0
-			|| strcmp(name, KKM_DEVICE_NAME) == 0) {
-			return dev;
-		}
-	}
-	return -1;
+    int count = GetNumMIDIOutputs();
+    for (int dev = 0; dev < count; ++dev) {
+        char name[60];
+        bool present = GetMIDIOutputName(dev, name, sizeof(name));
+        if (!present) {
+            continue;
+        }
+
+        for (int i = 0; kk_device_names[i] != NULL; i++) {
+            if (strstr(name, kk_device_names[i]) != NULL) {
+                return dev;
+            }
+        }
+    }
+    return -1;
 }
 
 signed char convertSignedMidiValue(unsigned char value) {

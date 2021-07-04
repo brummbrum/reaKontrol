@@ -10,6 +10,12 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     elseif (APPLE)
         message("Install prefix: Setting install prefix to Home:$ENV{HOME}/Library")
         set (CMAKE_INSTALL_PREFIX "$ENV{HOME}/Library" CACHE PATH "default install path" FORCE ) 
+
+        # forcing X86_64 mode - we don't want to compile for ARM yet
+        # thanks to Guillem LeónGuillem (https://github.com/guilevi)
+        # discussion about forcing X86_64 at the moment can be found at 
+        # https://github.com/brummbrum/reaKontrol/pull/51
+        set(CMAKE_OSX_ARCHITECTURES x86_64)
     endif()
 endif()
 message("Install prefix: ${CMAKE_INSTALL_PREFIX}")
